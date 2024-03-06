@@ -19,5 +19,8 @@ def create_app():
     from controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
 
+    from controllers.trips_controller import trip_bp
+    app.register_blueprint(trip_bp)
+
 
     return app
