@@ -1,7 +1,6 @@
 from init import db
 from marshmallow import Schema, fields
 
-
 class Destination(db.Model):
     __tablename__ = "destinations"
 

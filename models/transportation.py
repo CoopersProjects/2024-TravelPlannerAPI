@@ -1,6 +1,5 @@
 from init import db
 from marshmallow import Schema, fields
-from models.trips import Trip  
 from models.transportType import TransportType  
 
 class Transportation(db.Model):
@@ -16,7 +15,6 @@ class Transportation(db.Model):
     cost = db.Column(db.Float, nullable=False)
 
     transport_type = db.relationship('TransportType', backref='transportations', lazy=True)
-    trip = db.relationship('Trip', backref='transportations', lazy=True)
 
     def __repr__(self):
         return f"<Transportation {self.id}>"

@@ -1,8 +1,10 @@
-from flask import Blueprint, jsonify, request
-from init import db
-from models.trips import Trip, TripSchema
 from datetime import datetime
+from init import db
+from flask import Blueprint, jsonify, request
+from models.trips import Trip, TripSchema
+from models.destination import Destination
 from models.users import User
+from sqlalchemy.orm import joinedload
 
 trip_bp = Blueprint('trips', __name__, url_prefix='/trip')
 
@@ -18,19 +20,18 @@ def create_trip():
     end_date = request.json.get('end_date')
     budget = request.json.get('budget')
 
-    
     if not all([user_id, destination_id, start_date, end_date, budget]):
         return jsonify({'error': 'Missing required fields.'}), 400
-    
+
     try:
-        start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
-        end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
     except ValueError:
         return jsonify({'error': 'Invalid date format. Please provide dates in YYYY-MM-DD format.'}), 400
-    
+
     if start_date >= end_date:
         return jsonify({'error': 'End date must be after start date.'}), 400
-    
+
     if not (User.query.get(user_id) and Destination.query.get(destination_id)):
         return jsonify({'error': 'Invalid user_id or destination_id.'}), 400
 
@@ -45,7 +46,9 @@ def create_trip():
     db.session.add(new_trip)
     db.session.commit()
 
-    return trip_schema.jsonify(new_trip)
+    trip_data = trip_schema.dump(new_trip)
+
+    return jsonify(trip_data)
 
 # Get all trips
 @trip_bp.route('/read', methods=['GET'])
@@ -60,7 +63,8 @@ def get_trip(id):
     trip = Trip.query.get(id)
     if not trip:
         return jsonify({'error': 'Trip not found.'}), 404
-    return trip_schema.jsonify(trip)
+    trip_data = trip_schema.dump(trip)
+    return jsonify(trip_data)
 
 # Update a trip
 @trip_bp.route('/update/<int:id>', methods=['PUT'])
@@ -102,12 +106,14 @@ def update_trip(id):
 
     db.session.commit()
 
-    return trip_schema.jsonify(trip)
+    trip_data = trip_schema.dump(trip)
+
+    return jsonify(trip_data)
 
 # Delete a trip
 @trip_bp.route('/delete/<int:id>', methods=['DELETE'])
 def delete_trip(id):
-    trip = Trip.query.get(id)
+    trip = Trip.query.options(joinedload(Trip.destination)).get(id)
 
     if not trip:
         return jsonify({'error': 'Trip not found.'}), 404
@@ -115,4 +121,4 @@ def delete_trip(id):
     db.session.delete(trip)
     db.session.commit()
 
-    return trip_schema.jsonify(trip)
+    return jsonify({'message': f'Successfully deleted trip {id}'}), 200

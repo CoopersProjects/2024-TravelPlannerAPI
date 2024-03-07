@@ -42,6 +42,10 @@ class TripSchema(Schema):
     transportations = fields.Nested('TransportationSchema', many=True)
     destination = fields.Nested('DestinationSchema', many=False)
 
+    accommodations = fields.Nested('AccommodationSchema', many=True)
+    activities = fields.Nested('ActivitySchema', many=True)
+    transportations = fields.Nested('TransportationSchema', many=True)
+
 
 trip_schema = TripSchema()
 trips_schema = TripSchema(many=True)

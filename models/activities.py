@@ -1,5 +1,4 @@
 from init import db
-from models.trips import Trip 
 from marshmallow import Schema, fields
 
 

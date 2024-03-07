@@ -17,13 +17,18 @@ def create_destination():
 
     if not all([name, location, climate_id]):
         return jsonify({'error': 'Missing required fields.'}), 400
+    
+    climate_id = int(request.json.get('climate_id'))
+    
+    if not 1 <= climate_id <= 5:
+        return jsonify({'error': 'Invalid climate_id. Must be between 1 and 5.'}), 400
 
     new_destination = Destination(name=name, description=description, location=location, climate_id=climate_id)
 
     db.session.add(new_destination)
     db.session.commit()
 
-    return destination_schema.jsonify(new_destination)
+    return jsonify(destination_schema.dump(new_destination)), 201
 
 # Get all destinations
 @destination_bp.route('/read', methods=['GET'])
@@ -36,29 +41,36 @@ def get_destinations():
 @destination_bp.route('/read/<int:id>', methods=['GET'])
 def get_destination(id):
     destination = Destination.query.get(id)
-    return destination_schema.jsonify(destination)
+    if not destination:
+        return jsonify({'error': 'Destination not found.'}), 404
+    return jsonify(destination_schema.dump(destination))
 
 # Update a destination
 @destination_bp.route('/update/<int:id>', methods=['PUT'])
 def update_destination(id):
     destination = Destination.query.get(id)
 
+    if not destination:
+        return jsonify({'error': 'Destination not found.'}), 404
+
     name = request.json.get('name')
     description = request.json.get('description')
     location = request.json.get('location')
     climate_id = request.json.get('climate_id')
-
-    if not destination:
-        return jsonify({'error': 'Destination not found.'}), 404
 
     destination.name = name
     destination.description = description
     destination.location = location
     destination.climate_id = climate_id
 
+    climate_id = int(request.json.get('climate_id'))
+
+    if not 1 <= climate_id <= 5:
+        return jsonify({'error': 'Invalid climate_id. Must be between 1 and 5.'}), 400
+
     db.session.commit()
 
-    return destination_schema.jsonify(destination)
+    return jsonify(destination_schema.dump(destination))
 
 # Delete a destination
 @destination_bp.route('/delete/<int:id>', methods=['DELETE'])
@@ -71,4 +83,4 @@ def delete_destination(id):
     db.session.delete(destination)
     db.session.commit()
 
-    return destination_schema.jsonify(destination)
+    return jsonify({'message': f'Successfully deleted destination with id {id}'}), 200

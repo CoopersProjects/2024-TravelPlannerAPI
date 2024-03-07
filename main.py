@@ -32,7 +32,7 @@ def create_app():
     app.register_blueprint(activity_bp)
 
     from controllers.destination_controller import destination_bp
-    app.register_blueprint(activity_bp)
+    app.register_blueprint(destination_bp)
 
 
     return app
