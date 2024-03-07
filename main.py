@@ -31,5 +31,8 @@ def create_app():
     from controllers.activities_controller import activity_bp
     app.register_blueprint(activity_bp)
 
+    from controllers.destination_controller import destination_bp
+    app.register_blueprint(activity_bp)
+
 
     return app
