@@ -25,5 +25,11 @@ def create_app():
     from controllers.accommodation_controller import accom_bp
     app.register_blueprint(accom_bp)
 
+    from controllers.transportation_controller import transport_bp
+    app.register_blueprint(transport_bp)
+
+    from controllers.activities_controller import activity_bp
+    app.register_blueprint(activity_bp)
+
 
     return app

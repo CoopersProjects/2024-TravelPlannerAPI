@@ -2,6 +2,10 @@ from init import db
 from datetime import datetime
 from marshmallow import Schema, fields
 from models.users import User
+from models.accomodation import Accommodation
+from models.transportation import Transportation
+from models.activities import Activity
+from models.destination import Destination
 
 class Trip(db.Model):
     __tablename__ = "trips"
