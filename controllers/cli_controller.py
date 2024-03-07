@@ -1,6 +1,8 @@
 from flask import Blueprint
 from init import db, bcrypt
 from models.users import User
+from models.accomodation import Accommodation
+from models.trips import Trip
 
 
 db_commands = Blueprint('db', __name__)
@@ -31,6 +33,8 @@ def seed_tables():
    ]
 
    db.session.add_all(users)
+
+   
    db.session.commit()
 
    print("Tables seeded.")
