@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from init import db
 from models.destination import Destination, DestinationSchema
 
@@ -9,6 +10,7 @@ destinations_schema = DestinationSchema(many=True)
 
 # Create a destination
 @destination_bp.route('/create', methods=['POST'])
+@jwt_required()
 def create_destination():
     name = request.json.get('name')
     description = request.json.get('description')
@@ -47,6 +49,7 @@ def get_destination(id):
 
 # Update a destination
 @destination_bp.route('/update/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_destination(id):
     destination = Destination.query.get(id)
 
@@ -74,6 +77,7 @@ def update_destination(id):
 
 # Delete a destination
 @destination_bp.route('/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_destination(id):
     destination = Destination.query.get(id)
 

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from init import db
 from models.transportation import Transportation, TransportationSchema
 from datetime import datetime
@@ -12,6 +13,7 @@ transports_schema = TransportationSchema(many=True)
 
 # Create a transportation entry
 @transport_bp.route('/create', methods=['POST'])
+@jwt_required()
 def create_transport():
     trip_id = request.json.get('trip_id')
     transport_type_id = request.json.get('transport_type_id')
@@ -60,6 +62,7 @@ def get_transport(id):
 
 # Update a transportation entry
 @transport_bp.route('/update/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_transport(id):
     transport = Transportation.query.get(id)
 
@@ -79,6 +82,7 @@ def update_transport(id):
 
 # Delete a transportation entry
 @transport_bp.route('/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_transport(id):
     transport = Transportation.query.get(id)
 

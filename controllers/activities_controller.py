@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from init import db
 from models.activities import Activity, ActivitySchema
 from models.trips import Trip
@@ -11,6 +12,7 @@ activities_schema = ActivitySchema(many=True)
 
 # Create an activity
 @activity_bp.route('/create', methods=['POST'])
+@jwt_required()
 def create_activity():
     trip_id = request.json.get('trip_id')
 
@@ -54,6 +56,7 @@ def get_activity(id):
 
 # Update an activity
 @activity_bp.route('/update/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_activity(id):
     activity = Activity.query.get(id)
     if not activity:
@@ -80,6 +83,7 @@ def update_activity(id):
 
 # Delete an activity
 @activity_bp.route('/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_activity(id):
     activity = Activity.query.get(id)
 

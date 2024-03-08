@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from init import db
 from models.accomodation import Accommodation, AccommodationSchema
 from models.trips import Trip
@@ -11,6 +12,7 @@ accommodations_schema = AccommodationSchema(many=True)
 
 # Create an accommodation associated with a trip
 @accom_bp.route('/create', methods=['POST'])
+@jwt_required()
 def create_accommodation():
     data = request.json
     name = data.get('name')
@@ -58,6 +60,7 @@ def get_accommodation_by_id(id):
 
 # Update an accommodation
 @accom_bp.route('/update/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_accommodation(id):
     accommodation = Accommodation.query.get(id)
     if not accommodation:
@@ -79,6 +82,7 @@ def update_accommodation(id):
 
 # Delete an accommodation
 @accom_bp.route('/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_accommodation(id):
     accommodation = Accommodation.query.get(id)
     if not accommodation:

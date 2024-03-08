@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask_jwt_extended import jwt_required
 from init import db
 from flask import Blueprint, jsonify, request
 from models.trips import Trip, TripSchema
@@ -13,6 +14,7 @@ trips_schema = TripSchema(many=True)
 
 # Create a trip
 @trip_bp.route('/create', methods=['POST'])
+@jwt_required()
 def create_trip():
     user_id = request.json.get('user_id')
     destination_id = request.json.get('destination_id')
@@ -68,6 +70,7 @@ def get_trip(id):
 
 # Update a trip
 @trip_bp.route('/update/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_trip(id):
     trip = Trip.query.get(id)
 
@@ -112,6 +115,7 @@ def update_trip(id):
 
 # Delete a trip
 @trip_bp.route('/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_trip(id):
     trip = Trip.query.options(joinedload(Trip.destination)).get(id)
 
