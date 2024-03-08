@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
 from flask import Blueprint, jsonify, request
 from models.trips import Trip, TripSchema
@@ -77,6 +77,14 @@ def update_trip(id):
     if not trip:
         return jsonify({'error': 'Trip not found.'}), 404 
 
+    # Extract user ID from JWT token
+    current_user_id = get_jwt_identity()
+
+    # Check if the user is authorised to update the trip
+    if trip.user_id != current_user_id:
+        return jsonify({'error': 'You are not authorised to update this trip.'}), 403
+
+    # Proceed with updating the trip
     user_id = request.json.get('user_id')
     destination_id = request.json.get('destination_id')
     start_date_str = request.json.get('start_date')
@@ -92,16 +100,8 @@ def update_trip(id):
     if start_date >= end_date:
         return jsonify({'error': 'End date must be after start date.'}), 400
 
-    user = User.query.get(user_id)
-    destination = Destination.query.get(destination_id)
-
-    if not (user and destination):
-        errors = {}
-        if not user:
-            errors['user_id'] = 'User not found.'
-        if not destination:
-            errors['destination_id'] = 'Destination not found.'
-        return jsonify({'error': 'Invalid user_id or destination_id.', 'details': errors}), 400
+    if not (User.query.get(user_id) and Destination.query.get(destination_id)):
+        return jsonify({'error': 'Invalid user_id or destination_id.'}), 400
 
     # Ensure budget is a float
     try:
