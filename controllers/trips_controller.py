@@ -92,8 +92,16 @@ def update_trip(id):
     if start_date >= end_date:
         return jsonify({'error': 'End date must be after start date.'}), 400
 
-    if not (User.query.get(user_id) and Destination.query.get(destination_id)):
-        return jsonify({'error': 'Invalid user_id or destination_id.'}), 400
+    user = User.query.get(user_id)
+    destination = Destination.query.get(destination_id)
+
+    if not (user and destination):
+        errors = {}
+        if not user:
+            errors['user_id'] = 'User not found.'
+        if not destination:
+            errors['destination_id'] = 'Destination not found.'
+        return jsonify({'error': 'Invalid user_id or destination_id.', 'details': errors}), 400
 
     # Ensure budget is a float
     try:
