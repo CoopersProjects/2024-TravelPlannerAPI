@@ -15,8 +15,8 @@ transports_schema = TransportationSchema(many=True)
 def create_transport():
     trip_id = request.json.get('trip_id')
     transport_type_id = request.json.get('transport_type_id')
-    arrival_time = datetime.strptime(request.json.get('arrival_time'), '%Y-%m-%d %H:%M:%S')  # Parse datetime string
-    departure_time = datetime.strptime(request.json.get('departure_time'), '%Y-%m-%d %H:%M:%S')  # Parse datetime string
+    arrival_time = datetime.strptime(request.json.get('arrival_time'), '%Y-%m-%d')  
+    departure_time = datetime.strptime(request.json.get('departure_time'), '%Y-%m-%d')  
     arrival_location = request.json.get('arrival_location')
     departure_location = request.json.get('departure_location')
     cost = request.json.get('cost')
@@ -25,7 +25,7 @@ def create_transport():
         return jsonify({'error': 'Missing required fields.'}), 400
     
     # Ensure trip_id and transport_type_id are valid
-    if not (Trip.query.get(id) and TransportType.query.get(transport_type_id)):
+    if not (Trip.query.get(trip_id) and TransportType.query.get(transport_type_id)):
         return jsonify({'error': 'Invalid trip_id or transport_type_id.'}), 400
 
     new_transport = Transportation(
@@ -41,7 +41,7 @@ def create_transport():
     db.session.add(new_transport)
     db.session.commit()
 
-    return transport_schema.jsonify(new_transport)
+    return jsonify(transport_schema.dump(new_transport))
 
 # Get all transportation entries
 @transport_bp.route('/read', methods=['GET'])
@@ -54,7 +54,9 @@ def get_transports():
 @transport_bp.route('/read/<int:id>', methods=['GET'])
 def get_transport(id):
     transport = Transportation.query.get(id)
-    return transport_schema.jsonify(transport)
+    if not transport:
+        return jsonify({'error': 'Transportation not found.'}), 404
+    return jsonify(transport_schema.dump(transport))
 
 # Update a transportation entry
 @transport_bp.route('/update/<int:id>', methods=['PUT'])
@@ -72,7 +74,8 @@ def update_transport(id):
 
     db.session.commit()
 
-    return transport_schema.jsonify(transport)
+    # Return the updated transportation entry
+    return jsonify(transport_schema.dump(transport))
 
 # Delete a transportation entry
 @transport_bp.route('/delete/<int:id>', methods=['DELETE'])
@@ -86,4 +89,4 @@ def delete_transport(id):
     db.session.delete(transport)
     db.session.commit()
 
-    return transport_schema.jsonify(transport)
+    return jsonify({'message': f'Transportation with ID {id} deleted successfully.'})

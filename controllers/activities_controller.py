@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from init import db
 from models.activities import Activity, ActivitySchema
+from models.trips import Trip
 from datetime import datetime
 
 activity_bp = Blueprint('activity_controller', __name__, url_prefix='/activity')
@@ -12,6 +13,11 @@ activities_schema = ActivitySchema(many=True)
 @activity_bp.route('/create', methods=['POST'])
 def create_activity():
     trip_id = request.json.get('trip_id')
+
+    # Check if the trip_id exists
+    if not Trip.query.get(trip_id):
+        return jsonify({'error': 'Trip not found.'}), 404
+
     name = request.json.get('name')
     description = request.json.get('description')
     cost = request.json.get('cost')
@@ -40,20 +46,28 @@ def get_activities():
 @activity_bp.route('/read/<int:id>', methods=['GET'])
 def get_activity(id):
     activity = Activity.query.get(id)
-    return activity_schema.jsonify(activity)
+    if not activity:
+        return jsonify({'error': 'Activity not found.'}), 404
+    
+    activity_data = activity_schema.dump(activity)
+    return jsonify(activity_data)
 
 # Update an activity
 @activity_bp.route('/update/<int:id>', methods=['PUT'])
 def update_activity(id):
     activity = Activity.query.get(id)
+    if not activity:
+        return jsonify({'error': 'Activity not found.'}), 404 
 
     trip_id = request.json.get('trip_id')
+
+    # Check if the trip_id exists
+    if not Trip.query.get(trip_id):
+        return jsonify({'error': 'Trip not found.'}), 404
+
     name = request.json.get('name')
     description = request.json.get('description')
     cost = request.json.get('cost')
-
-    if not activity:
-        return jsonify({'error': 'Activity not found.'}), 404 
 
     activity.trip_id = trip_id
     activity.name = name
@@ -70,9 +84,9 @@ def delete_activity(id):
     activity = Activity.query.get(id)
 
     if not activity:
-        return jsonify({'error': 'Activity not found.'}), 404  
-    
+        return jsonify({'error': 'Activity not found.'}), 404
+
     db.session.delete(activity)
     db.session.commit()
 
-    return activity_schema.jsonify(activity)
+    return jsonify({'message': 'Activity deleted successfully.'})

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from init import db
 from models.accomodation import Accommodation, AccommodationSchema
+from models.trips import Trip
 from datetime import datetime
 
 accom_bp = Blueprint('accommodation_controller', __name__, url_prefix='/accommodation')
@@ -22,6 +23,10 @@ def create_accommodation():
     if not all([name, address, cost_per_night, trip_id]):
         return jsonify({'error': 'Missing required fields.'}), 400
 
+    # Check if the trip ID exists in the database
+    if not Trip.query.get(trip_id):
+        return jsonify({'error': 'Trip with the provided ID does not exist.'}), 404
+
     new_accommodation = Accommodation(
         name=name,
         address=address,
@@ -34,20 +39,22 @@ def create_accommodation():
     db.session.add(new_accommodation)
     db.session.commit()
 
-    return accommodation_schema.jsonify(new_accommodation)
+    return jsonify(accommodation_schema.dump(new_accommodation))
 
 @accom_bp.route('/read', methods=['GET'])
 def get_all_accommodations():
     accommodations = Accommodation.query.all()
-    return accommodations_schema.jsonify(accommodations)
+    # Serialize the accommodations data using the schema
+    result = accommodations_schema.dump(accommodations)
+    # Return the JSON response
+    return jsonify(result)
 
-# Get accommodation by ID
-@accom_bp.route('/<int:id>', methods=['GET'])
-def get_accommodation(id):
+@accom_bp.route('/read/<int:id>', methods=['GET'])
+def get_accommodation_by_id(id):
     accommodation = Accommodation.query.get(id)
     if not accommodation:
         return jsonify({'error': 'Accommodation not found.'}), 404
-    return accommodation_schema.jsonify(accommodation)
+    return jsonify(accommodation_schema.dump(accommodation))
 
 # Update an accommodation
 @accom_bp.route('/update/<int:id>', methods=['PUT'])
@@ -57,12 +64,18 @@ def update_accommodation(id):
         return jsonify({'error': 'Accommodation not found.'}), 404
 
     data = request.json
+    trip_id = data.get('trip_id')
+
+    # Check if the new trip ID exists in the database
+    if trip_id and not Trip.query.get(trip_id):
+        return jsonify({'error': 'Trip with the provided ID does not exist.'}), 404
+
     for field in ['name', 'address', 'check_in', 'check_out', 'cost_per_night', 'trip_id']:
         if field in data:
             setattr(accommodation, field, data[field])
 
     db.session.commit()
-    return accommodation_schema.jsonify(accommodation)
+    return jsonify(accommodation_schema.dump(accommodation))
 
 # Delete an accommodation
 @accom_bp.route('/delete/<int:id>', methods=['DELETE'])
@@ -73,6 +86,6 @@ def delete_accommodation(id):
 
     db.session.delete(accommodation)
     db.session.commit()
-    return jsonify({'message': 'Accommodation deleted successfully.'})
+    return jsonify({'message': f'Accommodation with ID {id} deleted successfully.'})
 
 
