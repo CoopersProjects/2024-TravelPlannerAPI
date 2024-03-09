@@ -77,13 +77,6 @@ def update_trip(id):
     if not trip:
         return jsonify({'error': 'Trip not found.'}), 404 
 
-    # Extract user ID from JWT token
-    current_user_id = get_jwt_identity()
-
-    # Check if the user is authorised to update the trip
-    if trip.user_id != current_user_id:
-        return jsonify({'error': 'You are not authorised to update this trip.'}), 403
-
     # Proceed with updating the trip
     user_id = request.json.get('user_id')
     destination_id = request.json.get('destination_id')
