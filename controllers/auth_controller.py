@@ -10,6 +10,8 @@ from models.users import User, user_schema
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+# Registering a new user
+
 @auth_bp.route("/register", methods=["POST"]) # endpoint = /auth/register
 def auth_register():
     try:
@@ -24,7 +26,7 @@ def auth_register():
 
        
         password = body_data.get('password')
-        
+        # Hash password for security
         if password:
             user.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -39,7 +41,7 @@ def auth_register():
             return {"error": f"The {err.orig.diag.column_name} is required"}
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"error": "Email address already in use"}, 409
-    
+    # User login
 @auth_bp.route("/login", methods=["POST"]) # endpoint = /auth/login
 def auth_login():
     
@@ -49,7 +51,7 @@ def auth_login():
     user = db.session.scalar(stmt)
     
     if user and bcrypt.check_password_hash(user.password, body_data.get("password")):
-       
+    #    Create and return token to user if details correct.
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
         
         return {"email": user.email, "token": token}

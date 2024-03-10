@@ -1,6 +1,8 @@
 from init import db, ma 
 from marshmallow import Schema, fields
 
+# User class creation
+
 class User(db.Model):
     __tablename__ = "users"
 
@@ -11,6 +13,8 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+    
+# User schema
     
 class UserSchema(ma.Schema):
     class Meta:

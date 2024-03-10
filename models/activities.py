@@ -1,7 +1,7 @@
 from init import db
 from marshmallow import Schema, fields
 
-
+# Activities class model
 class Activity(db.Model):
     __tablename__ = "activities"
 
@@ -14,6 +14,8 @@ class Activity(db.Model):
     def __repr__(self):
         return f"<Activity {self.id}>"
 
+# Activities class schema
+    
 class ActivitySchema(Schema):
     id = fields.Integer(dump_only=True)
     trip_id = fields.Integer(required=True)

@@ -27,6 +27,8 @@ def create_app():
     @app.errorhandler(ValidationError)
     def validation_error(error):
         return {"error": error.messages}, 400
+    
+    # Registering controllers
 
     from controllers.cli_controller import db_commands
     app.register_blueprint(db_commands)

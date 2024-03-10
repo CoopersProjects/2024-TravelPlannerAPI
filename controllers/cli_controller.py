@@ -15,6 +15,7 @@ from models.transportType import TransportType
 
 db_commands = Blueprint('db', __name__)
 
+# Create database tables
 @db_commands.cli.command('create')
 def create_tables():
     table_creation_order = [User, Climate, Destination, Trip, Accommodation, Activity, TransportType, Transportation]
@@ -27,12 +28,12 @@ def create_tables():
             print(f"Table {table_name} created.")
         else:
             print(f"Table {table_name} already exists.")
-
+# Drop database tables
 @db_commands.cli.command('drop')
 def drop_tables():
     db.drop_all()
     print("Tables dropped.")
-
+# Seed database tables
 @db_commands.cli.command('seed')
 def seed_tables():
    users = [

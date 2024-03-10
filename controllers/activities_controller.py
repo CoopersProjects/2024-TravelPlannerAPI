@@ -34,7 +34,7 @@ def create_activity():
     db.session.add(new_activity)
     db.session.commit()
 
-    # Serialize and return the new activity
+    # Serialise and return the new activity
     return activity_schema.jsonify(new_activity)
 
 # Get all activities

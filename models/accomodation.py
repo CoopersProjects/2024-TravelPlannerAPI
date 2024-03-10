@@ -1,6 +1,8 @@
 from init import db
 from marshmallow import Schema, fields
 
+# Accommodation class model
+
 class Accommodation(db.Model):
     __tablename__ = "accommodations"
 
@@ -14,6 +16,8 @@ class Accommodation(db.Model):
 
     def __repr__(self):
         return f"<Accommodation {self.id}: {self.name}>"
+    
+# Accommodation class Schema
     
 class AccommodationSchema(Schema):
     id = fields.Integer(dump_only=True)

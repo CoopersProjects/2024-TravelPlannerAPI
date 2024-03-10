@@ -1,5 +1,6 @@
 from init import db
 
+# Climate class model, no schema due to preset climate types.
 class Climate(db.Model):
     __tablename__ = "climates"
 

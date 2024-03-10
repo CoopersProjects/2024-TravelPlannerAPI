@@ -7,6 +7,8 @@ from models.transportation import Transportation
 from models.activities import Activity
 from models.destination import Destination
 
+# Trip Class model
+
 class Trip(db.Model):
     __tablename__ = "trips"
 
@@ -17,7 +19,7 @@ class Trip(db.Model):
     end_date = db.Column(db.DateTime, nullable=False)
     budget = db.Column(db.Float, nullable=True)  
 
-
+    # Back references/backpopulates
     accommodations = db.relationship('Accommodation', backref='trip', lazy=True)
     activities = db.relationship('Activity', backref='trip', lazy=True)
     transportations = db.relationship('Transportation', backref='trip', lazy=True)
@@ -28,7 +30,7 @@ class Trip(db.Model):
     def __repr__(self):
         return f"<Trip {self.id}>"
     
-
+# Trip model schema
 class TripSchema(Schema):
     id = fields.Integer(dump_only=True)
     user_id = fields.Integer(required=True)

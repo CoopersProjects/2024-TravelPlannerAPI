@@ -1,6 +1,8 @@
 from init import db
 from marshmallow import Schema, fields
 
+# Destination class model
+
 class Destination(db.Model):
     __tablename__ = "destinations"
 
@@ -14,7 +16,8 @@ class Destination(db.Model):
 
     def __repr__(self):
         return f"<Destination {self.name}>"
-    
+
+# Destination class schema
 class DestinationSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String(required=True)

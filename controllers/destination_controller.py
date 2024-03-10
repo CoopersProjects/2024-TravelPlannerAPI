@@ -16,7 +16,7 @@ def create_destination():
     description = request.json.get('description')
     location = request.json.get('location')
     climate_id = request.json.get('climate_id')
-
+    # Check all details are present, otherwise return error.
     if not all([name, location, climate_id]):
         return jsonify({'error': 'Missing required fields.'}), 400
     
@@ -67,7 +67,7 @@ def update_destination(id):
     destination.climate_id = climate_id
 
     climate_id = int(request.json.get('climate_id'))
-
+    # Only allow valid climate types, otherwise error.
     if not 1 <= climate_id <= 5:
         return jsonify({'error': 'Invalid climate_id. Must be between 1 and 5.'}), 400
 

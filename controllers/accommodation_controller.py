@@ -21,11 +21,11 @@ def create_accommodation():
     check_out = datetime.strptime(data.get('check_out'), '%Y-%m-%d') if data.get('check_out') else None
     cost_per_night = data.get('cost_per_night')
     trip_id = data.get('trip_id')
-
+    # Error if fields are missing in input
     if not all([name, address, cost_per_night, trip_id]):
         return jsonify({'error': 'Missing required fields.'}), 400
 
-    # Check if the trip ID exists in the database
+    # Check if the trip ID exists in the database, if not, error
     if not Trip.query.get(trip_id):
         return jsonify({'error': 'Trip with the provided ID does not exist.'}), 404
 
@@ -46,11 +46,12 @@ def create_accommodation():
 @accom_bp.route('/read', methods=['GET'])
 def get_all_accommodations():
     accommodations = Accommodation.query.all()
-    # Serialize the accommodations data using the schema
+    # Serialise the accommodations data using the schema
     result = accommodations_schema.dump(accommodations)
-    # Return the JSON response
+
     return jsonify(result)
 
+# Get accommodation by ID
 @accom_bp.route('/read/<int:id>', methods=['GET'])
 def get_accommodation_by_id(id):
     accommodation = Accommodation.query.get(id)

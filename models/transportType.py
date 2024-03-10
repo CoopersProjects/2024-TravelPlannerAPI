@@ -1,5 +1,7 @@
 from init import db
 
+# Transport model, no schema due to preset types.
+
 class TransportType(db.Model):
     __tablename__ = "transport_types"
 

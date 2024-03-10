@@ -2,6 +2,8 @@ from init import db
 from marshmallow import Schema, fields
 from models.transportType import TransportType  
 
+# Transportation model
+
 class Transportation(db.Model):
     __tablename__ = "transportations"
 
@@ -18,7 +20,8 @@ class Transportation(db.Model):
 
     def __repr__(self):
         return f"<Transportation {self.id}>"
-
+    
+# Transportation Schema
 class TransportationSchema(Schema):
     id = fields.Integer(dump_only=True)
     trip_id = fields.Integer(required=True)
