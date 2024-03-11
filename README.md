@@ -36,7 +36,9 @@ Function: Registers a user within the database.
 
 Input: 
     - `username` string: A user's username, maximum of 50 characters. Will be unique and not-null.
+    
     - `email` string: A user's associated email, maximum of 100 characters. Will also be unique and not-null.
+    
     - `password` string: A user's password, maximum of 50 characters. Cannot be null.
 
 `POST "/auth/login"`
@@ -45,6 +47,7 @@ Function: Allows a registered user to log-in and returns authentication token.
 
 Input:
     - `email` Uses the registered email.
+    
     - `password` Uses the registered password.
 
 `DELETE "/trip/delete/<int:id>"`
@@ -60,9 +63,13 @@ Function: Updates an existing trip. Requires a JWT token.
 
 Input: 
     - `user_id` User ID required.
+    
     - `destination_id` Valid Destination ID required.
+    
     - `start_date_str` Enter start date of trip (YYYY-MM-DD format, otherwise, error.)
+    
     - `end_date_str` Enter end date of trip (YYYY-MM-DD format, otherwise, error.)
+    
     - `budget` Enter budget for trip (as a float, otherwise error.)
 
 `GET "/trip/read/<int:id>"`
@@ -82,10 +89,15 @@ Resonse: Shows information about trips.
 Function: Creates a new trip. JWT required.
 
 Input: (If not all fields filled, return error.)
+
     - `user_id` User ID required.
+    
     - `destination_id` Valid Destination ID required.
+    
     - `start_date_str` Enter start date of trip (YYYY-MM-DD format, otherwise, error.)
+    
     - `end_date_str` Enter end date of trip (YYYY-MM-DD format, otherwise, error.)
+    
     - `budget` Enter budget for trip (as a float, otherwise error.)
 
 
@@ -95,8 +107,11 @@ Function: Creates a new destination. JWT required.
 
 Input: 
     - `name` String: Name of destination. Required.
+    
     - `description` Brief description of destination. Not required.
+    
     - `location` String: Location of said destination. Required field.
+    
     - `climate_id` Climate type of destination (1-5 only, otherwise error. Key: 1 - Tropical, 2 - Temperate, 3 - Dry, 4 - Polar, 5 - Continental.)
 
 `DELETE "/destination/delete/<int:id>"`
@@ -105,6 +120,7 @@ Function: Deletes an existing destination. JWT required.
 
 Response: 
     - If valid destination, returns: "({'message': f'Successfully deleted destination with id {id}'}), 200"
+    
     - Otherwise will return, "({'error': 'Destination not found.'}), 404"
 
 `PUT "/destination/update/<int:id>"`
@@ -113,8 +129,11 @@ Function: Updates an existing destination. JWT required.
 
 Input: 
     - `name` String: Name of destination.
+    
     - `description` Brief description of destination.
+    
     - `location` String: Location of said destination. 
+    
     - `climate_id` Climate type of destination (1-5 only, otherwise error. Key: 1 - Tropical, 2 - Temperate, 3 - Dry, 4 - Polar, 5 - Continental.)
 
 `GET "/destination/read"`
@@ -136,11 +155,17 @@ Function: Creates a new transportation event. JWT required.
 
 Input: (None can be null).
     - `trip_id` Enter a valid trip_id. If not a valid id, return error.
+    
     - `transport_type_id` Enter a valid transport_type_id. If not valid id, return error (Options include: 1 - Car, 2 - Bus, 3 - Plane, 4 - Train, 5 - Boat, 6 - Taxi, 7 - Walk, 8 - Bike.).
+    
     - `arrival_time` Enter arrival time (YYYY-MM-DD HH:MM:SS format, otherwise error.)
+    
     - `departure_time` Enter departure time (YYYY-MM-DD HH:MM:SS format, otherwise error)
+    
     - `arrival_location` String: Enter arrival location
+    
     - `departure_location` String: Enter the departure location.
+    
     - `cost` Enter the cost of transport.
 
 `DELETE "/transport/delete/<int:id>"`
@@ -149,6 +174,7 @@ Function: Deletes an existing transport event. JWT required.
 
 Response: 
     - If the transport event is valid, returns: ({'message': f'Transportation with ID {id} deleted successfully.'}).
+    
     - If the id does not exist, returns error.
 
 `PUT "/transport/update/<int:id>"`
@@ -157,11 +183,17 @@ Function: Updates a sepcific transport event. JWT required.
 
 Input: (Only updates changed fields.)
     - `trip_id` Enter a valid trip_id. If not a valid id, return error.
+    
     - `transport_type_id` Enter a valid transport_type_id. If not valid id, return error (Options include: 1 - Car, 2 - Bus, 3 - Plane, 4 - Train, 5 - Boat, 6 - Taxi,  7 - Walk, 8 - Bike.).
+    
     - `arrival_time` Enter arrival time (YYYY-MM-DD HH:MM:SS format, otherwise error.)
+    
     - `departure_time` Enter departure time (YYYY-MM-DD HH:MM:SS format, otherwise error)
+    
     - `arrival_location` String: Enter arrival location
+    
     - `departure_location` String: Enter the departure location.
+    
     - `cost` Enter the cost of transport.
 
 `GET "/transport/read"`
@@ -176,6 +208,7 @@ Function: Retrieves a transport event by ID.
 
 Response:
     - If valid ID, shows information on the specifically requested transport event.
+    
     - If ID does not exist, returns error.
 
 `POST "/accommodation/create"`
@@ -184,10 +217,15 @@ Function: Create a new accommodation instance for a trip. JWT required.
 
 Input: 
     - `name` String: Name of the accommodation. (Required field).
+    
     - `address` String: Address of the accommodation. (Required field).
+    
     - `check_in` Check in date of accommodation (YYYY-MM-DD formatting, not a required field)
+    
     - `check_out` Check out date of accommodation (YYYY-MM-DD formatting, not a required field)
+    
     - `cost_per_night` Cost per night at the accommodation. (required field).
+    
     - `trip_id` Trip ID that the accommodation is associated with. (Required field).
 
 `PUT "/accommodation/update/<int:id>"`
@@ -196,10 +234,15 @@ Function: Update an existing accommodation instance. JWT required.
 
 Input: 
     - `name` String: Name of the accommodation. 
+    
     - `address` String: Address of the accommodation. 
+    
     - `check_in` Check in date of accommodation (YYYY-MM-DD format).
+    
     - `check_out` Check out date of accommodation (YYYY-MM-DD format).
+    
     - `cost_per_night` Cost per night at the accommodation. 
+    
     - `trip_id` Trip ID that the accommodation is associated with. 
 
 `DELETE "/accommodation/delete/<int:id>"`
@@ -208,6 +251,7 @@ Function: Deletes an existing accommodation instance. JWT required.
 
 Response: 
     - If the accommodation instance ID is valid, returns: ({'message': f'Accommodation with ID {id} deleted successfully.'}).
+    
     - If the id does not exist, returns error.
 
 
@@ -224,6 +268,7 @@ Function: Retrieves an accommodation event by ID.
 
 Response:
     - If valid ID, shows information on the specifically requested accommodation instance.
+    
     - If ID does not exist, returns error.
 
 `POST "/activity/create"`
@@ -232,8 +277,11 @@ Function: Create a new activity for a trip. JWT required.
 
 Input: 
     - `name` String: Name of activity. (required field).
+    
     - `description` Description of activity.
+    
     - `cost` Cost of the specific activity. (Float value, if not, error).
+    
     - `trip_id` Associated trip ID that the user would like to add an activity to (required field).
 
 `DELETE "/activity/delete/<int:id>"`
@@ -242,6 +290,7 @@ Function: Deletes an existing activity. JWT required.
 
 Response: 
     - If the activity ID is valid, returns: ({'message': f'Activity with ID {id} deleted successfully.'}).
+    
     - If the id does not exist, returns error.
 
 `PUT "/activity/update/<int:id>"`
@@ -250,8 +299,11 @@ Function: Update an existing activity within a trip. JWT required.
 
 Input: 
     - `name` String: Name of activity.
+    
     - `description` Description of activity.
+    
     - `cost` Cost of the specific activity. (Float input, if not, error).
+    
     - `trip_id` Associated valid trip ID that the user would like to add an activity to.
 
 `GET "/activity/read"`
@@ -267,6 +319,7 @@ Function: Retrieves an activity by ID.
 
 Response:
     - If valid ID, shows information on the specifically requested activity.
+    
     - If ID does not exist, returns error.
 
 
