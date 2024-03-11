@@ -100,7 +100,7 @@ def update_trip(id):
     try:
         budget = float(budget)
     except ValueError:
-        return jsonify({'error': 'Invalid budget value. Please provide a float value.'}), 400
+        return jsonify({'error': 'Invalid budget value. Please only use numbers.'}), 400
 
     trip.user_id = user_id
     trip.destination_id = destination_id

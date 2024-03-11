@@ -27,6 +27,11 @@ def create_activity():
     if not all([trip_id, name]):
         return jsonify({'error': 'Missing required fields.'}), 400
     
+    try:
+        cost = float(cost)
+    except ValueError:
+        return jsonify({'error': 'Invalid cost value. Please provide a float value.'}), 400
+    
     # Create a new activity instance
     new_activity = Activity(trip_id=trip_id, name=name, description=description, cost=cost)
 
@@ -67,6 +72,11 @@ def update_activity(id):
     # Check if the trip_id exists
     if not Trip.query.get(trip_id):
         return jsonify({'error': 'Trip not found.'}), 404
+    
+    try:
+        cost = float(cost)
+    except ValueError:
+        return jsonify({'error': 'Invalid cost value. Please provide a float value.'}), 400
 
     name = request.json.get('name')
     description = request.json.get('description')

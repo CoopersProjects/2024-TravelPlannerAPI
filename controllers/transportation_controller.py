@@ -17,8 +17,8 @@ transports_schema = TransportationSchema(many=True)
 def create_transport():
     trip_id = request.json.get('trip_id')
     transport_type_id = request.json.get('transport_type_id')
-    arrival_time = datetime.strptime(request.json.get('arrival_time'), '%Y-%m-%d')  
-    departure_time = datetime.strptime(request.json.get('departure_time'), '%Y-%m-%d')  
+    arrival_time = datetime.strptime(request.json.get('arrival_time'), '%Y-%m-%d %H:%M:%S')  
+    departure_time = datetime.strptime(request.json.get('departure_time'), '%Y-%m-%d %H:%M:%S')  
     arrival_location = request.json.get('arrival_location')
     departure_location = request.json.get('departure_location')
     cost = request.json.get('cost')
@@ -28,7 +28,13 @@ def create_transport():
     
     # Ensure trip_id and transport_type_id are valid
     if not (Trip.query.get(trip_id) and TransportType.query.get(transport_type_id)):
-        return jsonify({'error': 'Invalid trip_id or transport_type_id.'}), 400
+        return jsonify({'error': 'Invalid trip_id or transport_type_id. Reminder: transport type must be between 1-8'}), 400
+    
+    try:
+        arrival_time = datetime.strptime(arrival_time, '%Y-%m-%d %H:%M:%S')
+        departure_time = datetime.strptime(departure_time, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        return jsonify({'error': 'Invalid datetime format. Please provide datetime in YYYY-MM-DD HH:MM:SS format.'}), 400
 
     new_transport = Transportation(
         trip_id=trip_id,

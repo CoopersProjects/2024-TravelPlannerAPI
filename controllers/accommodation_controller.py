@@ -21,13 +21,26 @@ def create_accommodation():
     check_out = datetime.strptime(data.get('check_out'), '%Y-%m-%d') if data.get('check_out') else None
     cost_per_night = data.get('cost_per_night')
     trip_id = data.get('trip_id')
+
+
     # Error if fields are missing in input
     if not all([name, address, cost_per_night, trip_id]):
         return jsonify({'error': 'Missing required fields.'}), 400
+    
+    try:
+        check_in = datetime.strptime(check_in, '%Y-%m-%d')
+        check_out = datetime.strptime(check_out, '%Y-%m-%d')
+    except ValueError:
+        return jsonify({'error': 'Invalid datetime format. Please provide datetime in YYYY-MM-DD format.'}), 400
 
     # Check if the trip ID exists in the database, if not, error
     if not Trip.query.get(trip_id):
         return jsonify({'error': 'Trip with the provided ID does not exist.'}), 404
+    
+    try:
+        cost_per_night = float(cost_per_night)
+    except ValueError:
+        return jsonify({'error': 'Invalid cost value. Please provide a float value.'}), 400
 
     new_accommodation = Accommodation(
         name=name,
@@ -77,8 +90,13 @@ def update_accommodation(id):
     for field in ['name', 'address', 'check_in', 'check_out', 'cost_per_night', 'trip_id']:
         if field in data:
             setattr(accommodation, field, data[field])
-
+    try:
+        cost_per_night = float(cost_per_night)
+    except ValueError:
+        return jsonify({'error': 'Invalid cost value. Please provide a float value.'}), 400
+    
     db.session.commit()
+
     return jsonify(accommodation_schema.dump(accommodation))
 
 # Delete an accommodation
