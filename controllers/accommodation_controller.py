@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from init import db
-from models.accomodation import Accommodation, AccommodationSchema
+from models.accommodation import Accommodation, AccommodationSchema
 from models.trips import Trip
 from datetime import datetime
 

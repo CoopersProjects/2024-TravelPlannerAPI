@@ -5,7 +5,7 @@ from sqlalchemy import inspect
 from init import db, bcrypt
 
 from models.users import User
-from models.accomodation import Accommodation
+from models.accommodation import Accommodation
 from models.trips import Trip
 from models.activities import Activity
 from models.destination import Destination
