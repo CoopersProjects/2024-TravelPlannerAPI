@@ -2,6 +2,8 @@
 ## Travel Planner API
 
 Link to Github: https://github.com/CoopersProjects/2024-TravelPlannerAPI
+
+
 `Insomnia` or `Postman` is required to replicate the running of this application.
 
 ### R1:	Identification of the problem you are trying to solve by building this particular app.
@@ -30,25 +32,34 @@ One of the key advantages of ORMs is their ability to ensure consistent data man
 In conclusion, ORMs refine database operations, leading to efficient and organised code outcomes. They serve as a vital abstraction layer that simplifies interactions with databases and enhances the scalability and maintainability of applications. As a result, they have become essential tools in the field of software development.
 
 ### R5: API Endpoints
+
 `POST "/auth/register"`
 
 Function: Registers a user within the database.
 
 Input: 
+
     - `username` string: A user's username, maximum of 50 characters. Will be unique and not-null.
     
     - `email` string: A user's associated email, maximum of 100 characters. Will also be unique and not-null.
     
     - `password` string: A user's password, maximum of 50 characters. Cannot be null.
 
+Expected Response: Creates a new user. If username or email is not unique, error response.
+
+
 `POST "/auth/login"`
 
 Function: Allows a registered user to log-in and returns authentication token.
 
 Input:
+
     - `email` Uses the registered email.
     
     - `password` Uses the registered password.
+
+Expected Response: Logs in a user. If username or password incorrect, error response.
+
 
 `DELETE "/trip/delete/<int:id>"`
 
@@ -56,12 +67,17 @@ Function: Deletes a single, specified, trip. JWT is required.
 
 Returns: 
     - "({'message': f'Successfully deleted trip {id}'}), 200"
+    
+
+Expected Response: Deletes a trip. If no trip with existing ID, error response.
+
 
 `PUT "/trip/update/<int:id>"`
 
 Function: Updates an existing trip. Requires a JWT token.
 
 Input: 
+
     - `user_id` User ID required.
     
     - `destination_id` Valid Destination ID required.
@@ -71,6 +87,10 @@ Input:
     - `end_date_str` Enter end date of trip (YYYY-MM-DD format, otherwise, error.)
     
     - `budget` Enter budget for trip (as a float, otherwise error.)
+    
+
+Expected Response: Updates a trip with new information. If trip ID doesn't exist, error response.
+
 
 `GET "/trip/read/<int:id>"`
 
@@ -78,11 +98,15 @@ Function: Retrieves existing details about a specific trip.
 
 Response: Shows information about a specific trip. If the trip doesn't exist, return error.
 
+Expected Response: Gets information about a specific trip. If ID doesn't exist, error response.
+
 `GET "/trip/read"`
 
 Function: Retrieves exisiting details about all available trips.
 
 Resonse: Shows information about trips.
+
+Expected Response: Gets information about all trips. 
 
 `POST "/trip/create"`
 
@@ -99,6 +123,9 @@ Input: (If not all fields filled, return error.)
     - `end_date_str` Enter end date of trip (YYYY-MM-DD format, otherwise, error.)
     
     - `budget` Enter budget for trip (as a float, otherwise error.)
+    
+
+Expected Response: Creates a new trip. If not all fields exist, or formatting is wrong, error response.
 
 
 `POST "/destination/create"`
@@ -106,6 +133,7 @@ Input: (If not all fields filled, return error.)
 Function: Creates a new destination. JWT required.
 
 Input: 
+
     - `name` String: Name of destination. Required.
     
     - `description` Brief description of destination. Not required.
@@ -113,21 +141,31 @@ Input:
     - `location` String: Location of said destination. Required field.
     
     - `climate_id` Climate type of destination (1-5 only, otherwise error. Key: 1 - Tropical, 2 - Temperate, 3 - Dry, 4 - Polar, 5 - Continental.)
+    
+
+Expected Response:Creates a new destination. If required fields are empty, or numbers for climate ID are not between 1-5, error response.
+
 
 `DELETE "/destination/delete/<int:id>"`
 
 Function: Deletes an existing destination. JWT required.
 
 Response: 
+
     - If valid destination, returns: "({'message': f'Successfully deleted destination with id {id}'}), 200"
     
     - Otherwise will return, "({'error': 'Destination not found.'}), 404"
+    
+
+Expected Response: Deletes an existing destination. If destination doesn't exist, error response.
+
 
 `PUT "/destination/update/<int:id>"`
 
 Function: Updates an existing destination. JWT required.
 
 Input: 
+
     - `name` String: Name of destination.
     
     - `description` Brief description of destination.
@@ -135,12 +173,17 @@ Input:
     - `location` String: Location of said destination. 
     
     - `climate_id` Climate type of destination (1-5 only, otherwise error. Key: 1 - Tropical, 2 - Temperate, 3 - Dry, 4 - Polar, 5 - Continental.)
+    
+
+Expected Response: Updates an existing destination. If ID doesn't exist, and climate ID isn't between 1-5, error response.
+
 
 `GET "/destination/read"`
 
 Function: Retrieves all exisiting destinations.
 
 Response: Shows all current destinations.
+
 
 `GET "/destination/read/<int:id>"`
 
@@ -154,6 +197,7 @@ Response: Shows existing trip with specified ID. If ID is not valid, return erro
 Function: Creates a new transportation event. JWT required. 
 
 Input: (None can be null).
+
     - `trip_id` Enter a valid trip_id. If not a valid id, return error.
     
     - `transport_type_id` Enter a valid transport_type_id. If not valid id, return error (Options include: 1 - Car, 2 - Bus, 3 - Plane, 4 - Train, 5 - Boat, 6 - Taxi, 7 - Walk, 8 - Bike.).
@@ -168,20 +212,30 @@ Input: (None can be null).
     
     - `cost` Enter the cost of transport.
 
+
+Expected Response: Creates a new transport event. If ID doesn't exist, or formatting is wrong, error response.
+
+
 `DELETE "/transport/delete/<int:id>"`
 
 Function: Deletes an existing transport event. JWT required. 
 
 Response: 
+
     - If the transport event is valid, returns: ({'message': f'Transportation with ID {id} deleted successfully.'}).
     
     - If the id does not exist, returns error.
+    
+
+Expected Response: Deletes an existing transport event. If ID doesn't exist, error response.
+
 
 `PUT "/transport/update/<int:id>"`
 
 Function: Updates a sepcific transport event. JWT required.
 
 Input: (Only updates changed fields.)
+
     - `trip_id` Enter a valid trip_id. If not a valid id, return error.
     
     - `transport_type_id` Enter a valid transport_type_id. If not valid id, return error (Options include: 1 - Car, 2 - Bus, 3 - Plane, 4 - Train, 5 - Boat, 6 - Taxi,  7 - Walk, 8 - Bike.).
@@ -195,6 +249,10 @@ Input: (Only updates changed fields.)
     - `departure_location` String: Enter the departure location.
     
     - `cost` Enter the cost of transport.
+    
+
+Expected Response: Updates an existing transport event. If ID is not valid, or formatting is wrong, error response.
+
 
 `GET "/transport/read"`
 
@@ -207,17 +265,20 @@ Response: Shows all transport events.
 Function: Retrieves a transport event by ID.
 
 Response:
+
     - If valid ID, shows information on the specifically requested transport event.
     
     - If ID does not exist, returns error.
+    
 
 `POST "/accommodation/create"`
 
 Function: Create a new accommodation instance for a trip. JWT required.
 
 Input: 
+
     - `name` String: Name of the accommodation. (Required field).
-    
+
     - `address` String: Address of the accommodation. (Required field).
     
     - `check_in` Check in date of accommodation (YYYY-MM-DD formatting, not a required field)
@@ -227,12 +288,17 @@ Input:
     - `cost_per_night` Cost per night at the accommodation. (required field).
     
     - `trip_id` Trip ID that the accommodation is associated with. (Required field).
+    
+
+Expected Response: Creates a new accommodation instance. If required fields are missing or formatting is wrong, error response.
+
 
 `PUT "/accommodation/update/<int:id>"`
 
 Function: Update an existing accommodation instance. JWT required.
 
 Input: 
+
     - `name` String: Name of the accommodation. 
     
     - `address` String: Address of the accommodation. 
@@ -244,12 +310,17 @@ Input:
     - `cost_per_night` Cost per night at the accommodation. 
     
     - `trip_id` Trip ID that the accommodation is associated with. 
+    
+
+Expected Response: Updates an existing accommodation instace. If ID doesn't exist or formatting is incorrect, error response.
+
 
 `DELETE "/accommodation/delete/<int:id>"`
 
 Function: Deletes an existing accommodation instance. JWT required. 
 
 Response: 
+
     - If the accommodation instance ID is valid, returns: ({'message': f'Accommodation with ID {id} deleted successfully.'}).
     
     - If the id does not exist, returns error.
@@ -267,15 +338,18 @@ Response: Shows all accommodation instances.
 Function: Retrieves an accommodation event by ID.
 
 Response:
+
     - If valid ID, shows information on the specifically requested accommodation instance.
     
     - If ID does not exist, returns error.
+    
 
 `POST "/activity/create"`
 
 Function: Create a new activity for a trip. JWT required.
 
 Input: 
+
     - `name` String: Name of activity. (required field).
     
     - `description` Description of activity.
@@ -283,12 +357,17 @@ Input:
     - `cost` Cost of the specific activity. (Float value, if not, error).
     
     - `trip_id` Associated trip ID that the user would like to add an activity to (required field).
+    
+
+Expected Response: Creates a new activity. If required fields are missing or formatting is incorrect, error response.
+
 
 `DELETE "/activity/delete/<int:id>"`
 
 Function: Deletes an existing activity. JWT required. 
 
 Response: 
+
     - If the activity ID is valid, returns: ({'message': f'Activity with ID {id} deleted successfully.'}).
     
     - If the id does not exist, returns error.
@@ -298,6 +377,7 @@ Response:
 Function: Update an existing activity within a trip. JWT required.
 
 Input: 
+
     - `name` String: Name of activity.
     
     - `description` Description of activity.
@@ -305,6 +385,10 @@ Input:
     - `cost` Cost of the specific activity. (Float input, if not, error).
     
     - `trip_id` Associated valid trip ID that the user would like to add an activity to.
+    
+
+Expected Response: Updates an existing activity. If ID doesn't exist, or formatting is incorrect, error response.
+
 
 `GET "/activity/read"`
 
@@ -318,10 +402,10 @@ Response: Shows all activities.
 Function: Retrieves an activity by ID.
 
 Response:
+
     - If valid ID, shows information on the specifically requested activity.
     
     - If ID does not exist, returns error.
-
 
 ### R6:	An ERD for your app
 Here is my ERD:
