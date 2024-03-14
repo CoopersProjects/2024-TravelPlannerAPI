@@ -57,6 +57,7 @@ def create_accommodation():
     return jsonify(accommodation_schema.dump(new_accommodation))
 
 @accom_bp.route('/read', methods=['GET'])
+@jwt_required()
 def get_all_accommodations():
     accommodations = Accommodation.query.all()
     # Serialise the accommodations data using the schema
@@ -66,6 +67,7 @@ def get_all_accommodations():
 
 # Get accommodation by ID
 @accom_bp.route('/read/<int:id>', methods=['GET'])
+@jwt_required()
 def get_accommodation_by_id(id):
     accommodation = Accommodation.query.get(id)
     if not accommodation:

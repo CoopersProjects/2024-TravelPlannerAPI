@@ -54,6 +54,7 @@ def create_trip():
 
 # Get all trips
 @trip_bp.route('/read', methods=['GET'])
+@jwt_required()
 def get_trips():
     all_trips = Trip.query.all()
     result = trips_schema.dump(all_trips)
@@ -61,6 +62,7 @@ def get_trips():
 
 # Get single trip by ID
 @trip_bp.route('/read/<int:id>', methods=['GET'])
+@jwt_required()
 def get_trip(id):
     trip = Trip.query.get(id)
     if not trip:

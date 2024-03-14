@@ -44,6 +44,7 @@ def create_activity():
 
 # Get all activities
 @activity_bp.route('/read', methods=['GET'])
+@jwt_required()
 def get_activities():
     all_activities = Activity.query.all()
     result = activities_schema.dump(all_activities)
@@ -51,6 +52,7 @@ def get_activities():
 
 # Get a single activity by ID
 @activity_bp.route('/read/<int:id>', methods=['GET'])
+@jwt_required()
 def get_activity(id):
     activity = Activity.query.get(id)
     if not activity:

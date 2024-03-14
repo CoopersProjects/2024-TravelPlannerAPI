@@ -34,6 +34,7 @@ def create_destination():
 
 # Get all destinations
 @destination_bp.route('/read', methods=['GET'])
+@jwt_required()
 def get_destinations():
     all_destinations = Destination.query.all()
     result = destinations_schema.dump(all_destinations)
@@ -41,6 +42,7 @@ def get_destinations():
 
 # Get single destination by ID
 @destination_bp.route('/read/<int:id>', methods=['GET'])
+@jwt_required()
 def get_destination(id):
     destination = Destination.query.get(id)
     if not destination:

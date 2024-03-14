@@ -53,6 +53,7 @@ def create_transport():
 
 # Get all transportation entries
 @transport_bp.route('/read', methods=['GET'])
+@jwt_required()
 def get_transports():
     all_transports = Transportation.query.all()
     result = transports_schema.dump(all_transports)
@@ -60,6 +61,7 @@ def get_transports():
 
 # Get single transportation entry by ID
 @transport_bp.route('/read/<int:id>', methods=['GET'])
+@jwt_required()
 def get_transport(id):
     transport = Transportation.query.get(id)
     if not transport:
