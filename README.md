@@ -94,7 +94,7 @@ Expected Response: Updates a trip with new information. If trip ID doesn't exist
 
 `GET "/trip/read/<int:id>"`
 
-Function: Retrieves existing details about a specific trip.
+Function: Retrieves existing details about a specific trip. Requires a JWT token.
 
 Response: Shows information about a specific trip. If the trip doesn't exist, return error.
 
@@ -102,7 +102,7 @@ Expected Response: Gets information about a specific trip. If ID doesn't exist, 
 
 `GET "/trip/read"`
 
-Function: Retrieves exisiting details about all available trips.
+Function: Retrieves exisiting details about all available trips. Requires a JWT token.
 
 Resonse: Shows information about trips.
 
@@ -180,14 +180,14 @@ Expected Response: Updates an existing destination. If ID doesn't exist, and cli
 
 `GET "/destination/read"`
 
-Function: Retrieves all exisiting destinations.
+Function: Retrieves all exisiting destinations. Requires a JWT token.
 
 Response: Shows all current destinations.
 
 
 `GET "/destination/read/<int:id>"`
 
-Function: Retrieves a single existing location by ID.
+Function: Retrieves a single existing location by ID. Requires a JWT token.
 
 Response: Shows existing trip with specified ID. If ID is not valid, return error.
 
@@ -256,13 +256,13 @@ Expected Response: Updates an existing transport event. If ID is not valid, or f
 
 `GET "/transport/read"`
 
-Function: Retrieves all available transport events.
+Function: Retrieves all available transport events. Requires a JWT token.
 
 Response: Shows all transport events.
 
 `GET "/transport/read/<int:id>"`
-
-Function: Retrieves a transport event by ID.
+ 
+Function: Retrieves a transport event by ID. Requires a JWT token.
 
 Response:
 
@@ -328,14 +328,14 @@ Response:
 
 `GET "/accommodation/read"`
 
-Function: Retrieves all available accommodation instances.
+Function: Retrieves all available accommodation instances. Requires a JWT token.
 
 Response: Shows all accommodation instances.
 
 
 `GET "/accommodation/read/<int:id>"`
 
-Function: Retrieves an accommodation event by ID.
+Function: Retrieves an accommodation event by ID. Requires a JWT token.
 
 Response:
 
@@ -392,14 +392,14 @@ Expected Response: Updates an existing activity. If ID doesn't exist, or formatt
 
 `GET "/activity/read"`
 
-Function: Retrieves all available activities.
+Function: Retrieves all available activities. Requires a JWT token.
 
 Response: Shows all activities.
 
 
 `GET "/activity/read/<int:id>"`
 
-Function: Retrieves an activity by ID.
+Function: Retrieves an activity by ID. Requires a JWT token.
 
 Response:
 
